@@ -13,16 +13,21 @@ from scipy.stats import norm
 import seaborn as sns
 import os
 import datetime
+import json
 
 
+def get_key()
+    with open("key.json", "r") as key_file:
+        key = json.load(key_file)
+    api_key = key["api_key"]
+    return api_key
 
-api_key = "q5psyt7drxq555d3crj7neue"
 error_message = {200: 'OK', 400 : 'ERROR - Bad Request', 401 : 'ERROR - Unauthorised', 403 : 'ERROR - Forbidden', 404 : 'ERROR - Not Found', 405 : 'ERROR - Method Not Allowed', 500 : 'ERROR - Internal Server Error'}
 
 def parameter_def(post_code, rad, min_beds, max_beds, search_type):
     """ search_type can only take two possible strings, 'sale' and 'rent'. It uses this to define the appropriate parameters for Zoopla. The aim is to make one API call per bedroom type, so this will create a list of parameters"""
-#    parameters = {'api_key' : "q5psyt7drxq555d3crj7neue", 'postcode' : post_code, 'include_sold' : "yes", 'include_rented' : "yes", 'radius' : rad, 'listing_status' : search_type, 'minimum_beds' : min_beds, 'maximum_beds' : max_beds, 'summarised' : "yes", 'page_size' : 100}
-    parameters = [ {'api_key' : "kzzrf8zpepk6vpb7hs7qng9k", 'postcode' : post_code, 'include_sold' : "yes", 'include_rented' : "yes", 'radius' : rad, 'listing_status' : search_type, 'minimum_beds' : i, 'maximum_beds' : i, 'summarised' : "yes", 'page_size' : 100} for i in range(min_beds, max_beds+1,1)]    
+    api_key = get_key()
+    parameters = [ {'api_key' : api_key, 'postcode' : post_code, 'include_sold' : "yes", 'include_rented' : "yes", 'radius' : rad, 'listing_status' : search_type, 'minimum_beds' : i, 'maximum_beds' : i, 'summarised' : "yes", 'page_size' : 100} for i in range(min_beds, max_beds+1,1)]    
     return parameters
 
 def data_load(website, parameters, min_beds, max_beds, search_type):
